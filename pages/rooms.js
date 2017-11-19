@@ -72,13 +72,13 @@ export default class RoomPage extends React.Component {
     this.socket.emit('updateRoom', this.state.room)
   }
 
-  handleRoomName = (event) => {
+  handlechainName = (event) => {
     event.preventDefault();
     this.setState({
       ...this.state,
       room: {
         ...this.state.room,
-        roomName: event.target.value
+        chainName: event.target.value
       }
     })
   }
@@ -105,10 +105,10 @@ export default class RoomPage extends React.Component {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
           <Form>
-            <Form.Input type="text" placeholder="Room Name" value={this.state.room.roomName} onChange={ (e) => this.handleRoomName(e)} />
+            <Form.Input type="text" placeholder="Room Name" value={this.state.room.chainName} onChange={ (e) => this.handlechainName(e)} />
             <Form.Button content='Submit' onClick={(e) => this.updateRoom(e)} />
           </Form>
-          <Header as="h2">In room {this.state.room.roomName}</Header>
+          <Header as="h2">In room {this.state.room.chainName}</Header>
           <Header as="h4">Expected Duration: {this.state.room.duration} mins</Header>
           <Form>
             <label>My username:</label>

@@ -26,8 +26,8 @@ export default class HomePage extends React.Component {
           <Header as="h2">Welcome to Dummy Chain</Header>
           <Header as="h3">Simple web visualization of Blockchain</Header>
           <br/>
-          <Button onClick={() => handler('/makeRoom')}>Make A Room</Button>
-          <Button onClick={() => handler('/joinRoom')}>Join A Room</Button>
+          <Button onClick={() => handler('/makeChain')}>Make A Chain</Button>
+          <Button onClick={() => handler('/joinRoom')}>Join A Chain</Button>
         </div>
       </PageContainer>
     )
