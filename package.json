@@ -2,6 +2,8 @@
   "name": "dummychain",
   "version": "1.0.0",
   "dependencies": {
+    "@vx/network": "0.0.143",
+    "d3-scale": "^1.0.7",
     "express": "^4.15.2",
     "isomorphic-fetch": "^2.2.1",
     "next": "latest",

@@ -8,6 +8,10 @@ import PageContainer from '../components/pageContainer'
 import { Header, Form, Button, Input, Label } from 'semantic-ui-react'
 import Head from 'next/head';
 
+import { Graph } from '@vx/network'
+import {scaleOrdinal, schemeCategory20c} from 'd3-scale';
+
+
 export default class ChainPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -21,7 +25,6 @@ export default class ChainPage extends React.Component {
     const chains = await response.json()
     return { chains }
   }
-
 
   static defaultProps = {
     chains: []
@@ -62,6 +65,7 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
+      nodes: [{x: 50, y: 20}, {x: 200, y: 300}, {x: 300, y: 40}],
     }
   }
 
@@ -93,6 +97,42 @@ export default class ChainPage extends React.Component {
     return Object.keys(chain).length === 0 && chain.constructor === Object
   }
 
+  addNode = (e) => {
+    e.preventDefault();
+    const newNodes = this.state.nodes;
+    newNodes.push({x: parseInt(1000 * Math.random()), y: parseInt(1000 * Math.random())})
+    this.setState({
+      ...this.state,
+      nodes: newNodes
+    })
+  }
+
+  renderGraph = () => {
+    const width = '100vw'
+    const height = '100vh';
+    const nodes =
+      [{x: 50, y: 20}, {x: 200, y: 300}, {x: 300, y: 40}];
+
+    const sampleData = {
+      nodes: this.state.nodes,
+      links: [
+        {source: nodes[0], target: nodes[1]},
+        {source: nodes[1], target: nodes[2]},
+        {source: nodes[2], target: nodes[0]}
+      ]
+    };
+
+    return <svg width={width} height={height}>
+      <rect
+        width={width}
+        height={height}
+        rx={14}
+        fill='#272b4d'
+      />
+    <Graph graph={sampleData} />
+    </svg>
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
@@ -105,6 +145,10 @@ export default class ChainPage extends React.Component {
             <label>My username:</label>
             <Form.Input type="text" placeholder="Enter your name" value={this.state.username} onChange={ (e) => this.handleUsername(e)} />
             <Form.Button content='Submit' />
+          </Form>
+          {this.renderGraph()}
+          <Form>
+            <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
         </div>
       )
@@ -155,12 +199,12 @@ export default class ChainPage extends React.Component {
 
   render(){
     return(
-      <PageContainer>
+      <div style={{width: '100vw', height: '100vh', textAlign: 'center'}}>
         <Head>
-          <a href="http://www.freepik.com/free-vector/animal-avatars-in-flat-design_772910.htm">Animal Avatars by Freepik</a>
+          <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css'/>
         </Head>
         {this.renderPage()}
-      </PageContainer>
+      </div>
     )
   }
 }
