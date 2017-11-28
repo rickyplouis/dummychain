@@ -7,10 +7,7 @@ import PageContainer from '../components/pageContainer'
 
 import { Header, Form, Button, Input, Label } from 'semantic-ui-react'
 import Head from 'next/head';
-
-import { Graph } from '@vx/network'
-import {scaleOrdinal, schemeCategory20c} from 'd3-scale';
-
+import Tree     from './tree'
 
 export default class ChainPage extends React.Component {
 
@@ -97,36 +94,6 @@ export default class ChainPage extends React.Component {
     return Object.keys(chain).length === 0 && chain.constructor === Object
   }
 
-  addNode = (e) => {
-    e.preventDefault();
-    const newNodes = this.state.nodes;
-    newNodes.push({x: parseInt(1600 * Math.random()), y: parseInt(800 * Math.random())})
-    this.setState({
-      ...this.state,
-      nodes: newNodes
-    })
-  }
-
-  makeLinks = () => {
-    let links = [];
-    for (let x = 0; x < this.state.nodes.length -1; x++){
-      links.push({source: this.state.nodes[x], target: this.state.nodes[x+1]})
-    }
-    return links;
-  }
-
-  renderGraph = () => {
-    const sampleData = {
-      nodes: this.state.nodes,
-      links: this.makeLinks()
-    };
-
-    return <svg width={'100vw'} height={'100vh'}>
-            <rect width={'100vw'} height={'100vh'} rx={14} fill='#272b4d' />
-            <Graph graph={sampleData} />
-           </svg>
-  }
-
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
@@ -134,7 +101,7 @@ export default class ChainPage extends React.Component {
           <Form>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
-          {this.renderGraph()}
+          <Tree/>
         </div>
       )
   }
