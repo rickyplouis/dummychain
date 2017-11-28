@@ -7,7 +7,47 @@ import PageContainer from '../components/pageContainer'
 
 import { Header, Form, Button, Input, Label } from 'semantic-ui-react'
 import Head from 'next/head';
-import Tree     from './tree'
+import { Tree } from '@vx/hierarchy';
+import { hierarchy } from 'd3-hierarchy';
+import { LinearGradient } from '@vx/gradient';
+import * as Chain from '../controllers/chainController'
+
+const raw = {
+  "name": "Genesis",
+  "color": 'blue',
+  "children": [{
+    "name": "A",
+    "children": [
+      { "name": "A1" },
+      { "name": "A2" },
+      { "name": "A3" },
+      { "name": "C",
+        "children": [{
+          "name": "C1",
+        }, {
+          "name": "D",
+          "children": [{
+            "name": "D1"
+          },{
+            "name": "D2"
+          },{
+            "name": "D3"
+          }]
+        }]
+      },
+    ]},
+    { "name": "Z" },
+    {
+    "name": "B",
+    "children": [
+      { "name": "B1"},
+      { "name": "B2"},
+      { "name": "B3"},
+    ]},
+  ],
+};
+
+const data = hierarchy(raw);
 
 export default class ChainPage extends React.Component {
 
@@ -94,6 +134,30 @@ export default class ChainPage extends React.Component {
     return Object.keys(chain).length === 0 && chain.constructor === Object
   }
 
+  renderTree = () => {
+    return (<svg width={'100vw'} height={'100vh'}>
+          <LinearGradient id="lg" from="#fd9b93" to="#fe6e9e" />
+          <rect
+            width={'100vw'}
+            height={'100vh'}
+            rx={14}
+            fill="#272b4d"
+          />
+          <Tree
+            top={10}
+            left={30}
+            root={data}
+            size={[
+              800,
+              1000
+            ]}
+            nodeComponent={Chain.Node}
+            linkComponent={Chain.Link}
+          />
+        </svg>
+      )
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
@@ -101,7 +165,7 @@ export default class ChainPage extends React.Component {
           <Form>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
-          <Tree/>
+          {this.renderTree()}
         </div>
       )
   }
