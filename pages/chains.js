@@ -107,30 +107,24 @@ export default class ChainPage extends React.Component {
     })
   }
 
-  renderGraph = () => {
-    const width = '100vw'
-    const height = '100vh';
-    const nodes =
-      [{x: 50, y: 20}, {x: 200, y: 300}, {x: 300, y: 40}];
+  makeLinks = () => {
+    let links = [];
+    for (let x = 0; x < this.state.nodes.length -1; x++){
+      links.push({source: this.state.nodes[x], target: this.state.nodes[x+1]})
+    }
+    return links;
+  }
 
+  renderGraph = () => {
     const sampleData = {
       nodes: this.state.nodes,
-      links: [
-        {source: nodes[0], target: nodes[1]},
-        {source: nodes[1], target: nodes[2]},
-        {source: nodes[2], target: nodes[0]}
-      ]
+      links: this.makeLinks()
     };
 
-    return <svg width={width} height={height}>
-      <rect
-        width={width}
-        height={height}
-        rx={14}
-        fill='#272b4d'
-      />
-    <Graph graph={sampleData} />
-    </svg>
+    return <svg width={'100vw'} height={'100vh'}>
+            <rect width={'100vw'} height={'100vh'} rx={14} fill='#272b4d' />
+            <Graph graph={sampleData} />
+           </svg>
   }
 
   renderChain = () => {
