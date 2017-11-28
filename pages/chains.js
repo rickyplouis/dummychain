@@ -100,7 +100,7 @@ export default class ChainPage extends React.Component {
   addNode = (e) => {
     e.preventDefault();
     const newNodes = this.state.nodes;
-    newNodes.push({x: parseInt(1000 * Math.random()), y: parseInt(1000 * Math.random())})
+    newNodes.push({x: parseInt(1600 * Math.random()), y: parseInt(800 * Math.random())})
     this.setState({
       ...this.state,
       nodes: newNodes
@@ -130,20 +130,11 @@ export default class ChainPage extends React.Component {
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
-          <Form>
-            <Form.Input type="text" placeholder="Chain Name" value={this.state.chain.chainName} onChange={ (e) => this.handlechainName(e)} />
-            <Form.Button content='Submit' onClick={(e) => this.updateChain(e)} />
-          </Form>
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
-          <Form>
-            <label>My username:</label>
-            <Form.Input type="text" placeholder="Enter your name" value={this.state.username} onChange={ (e) => this.handleUsername(e)} />
-            <Form.Button content='Submit' />
-          </Form>
-          {this.renderGraph()}
           <Form>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
+          {this.renderGraph()}
         </div>
       )
   }
