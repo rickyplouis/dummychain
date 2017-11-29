@@ -12,43 +12,6 @@ import { hierarchy } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
 import * as Chain from '../controllers/chainController'
 
-const raw = {
-  "name": "Genesis",
-  "color": 'blue',
-  "children": [{
-    "name": "A",
-    "children": [
-      { "name": "A1" },
-      { "name": "A2" },
-      { "name": "A3" },
-      { "name": "C",
-        "children": [{
-          "name": "C1",
-        }, {
-          "name": "D",
-          "children": [{
-            "name": "D1"
-          },{
-            "name": "D2"
-          },{
-            "name": "D3"
-          }]
-        }]
-      },
-    ]},
-    { "name": "Z" },
-    {
-    "name": "B",
-    "children": [
-      { "name": "B1"},
-      { "name": "B2"},
-      { "name": "B3"},
-    ]},
-  ],
-};
-
-const data = hierarchy(raw);
-
 export default class ChainPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -102,7 +65,32 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
-      nodes: [{x: 50, y: 20}, {x: 200, y: 300}, {x: 300, y: 40}],
+      tree: {
+        "name": "Genesis",
+        "color": 'blue',
+        "children": [{
+          "name": "A",
+          "children": [
+            { "name": "A1" },
+            { "name": "A2" },
+            { "name": "A3" },
+            { "name": "C",
+              "children": [{
+                "name": "C1",
+              }, {
+                "name": "D",
+                "children": [{
+                  "name": "D1"
+                },{
+                  "name": "D2"
+                },{
+                  "name": "D3"
+                }]
+              }]
+            },
+          ]},
+        ],
+      }
     }
   }
 
@@ -146,7 +134,7 @@ export default class ChainPage extends React.Component {
           <Tree
             top={10}
             left={30}
-            root={data}
+            root={hierarchy(this.state.tree)}
             size={[
               800,
               1000
