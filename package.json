@@ -6,6 +6,7 @@
     "@vx/group": "0.0.143",
     "@vx/hierarchy": "0.0.144",
     "@vx/shape": "0.0.147",
+    "@vx/tooltip": "0.0.148",
     "d3-hierarchy": "^1.1.5",
     "express": "^4.15.2",
     "isomorphic-fetch": "^2.2.1",

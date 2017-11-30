@@ -1,21 +1,6 @@
 import { LinkHorizontal } from '@vx/shape'
 import { Group } from '@vx/group'
-
-/**
-      tree: { name: 'Genesis', type: 'block',
-        children: [{ name: 'A', type: 'block',
-          children: [{ name: 'A1', type: 'user' }, { name: 'A2', type: 'user' }, { name: 'A3', type: 'user' }, { name: 'C', type: 'block',
-              children: [{ name: 'C1', type: 'user'}, {name: 'D', type:'block',
-                  children: [{ name: 'D1', type: 'user' },{ name: 'D2', type: 'user' },{ name: 'D3', type: 'user'}
-                ]
-              }]
-            },
-          ]},
-        ],
-      }
-**/
-
-
+import { withTooltip, Tooltip } from '@vx/tooltip';
 
 var chain = {
   Node({node, events}){
@@ -36,7 +21,7 @@ var chain = {
             y={-height / 2}
             x={-width / 2}
             fill={"#272b4d"}
-            stroke={node.children ? "pink" : "#26deb0"}
+            stroke={node.children ? "pink": "#26deb0"}
             strokeWidth={1}
             strokeDasharray={!node.children ? "2,2" : "0"}
             strokeOpacity={!node.children ? .6 : 1}
@@ -44,8 +29,15 @@ var chain = {
             onClick={() => {
               alert(`clicked: ${JSON.stringify(node.data.id)} Node`)
             }}
-            onMouseOver={(e, f) => {
+            onMouseOver={(e) => {
+              e.preventDefault()
+              for( let key in withTooltip){
+                console.log('withTooltip', key);
+              }
               console.log('e.target', e.target)
+            }}
+            onMouseLeave={(e) => {
+              e.preventDefault()
             }}
           />
         }

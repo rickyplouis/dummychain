@@ -10,7 +10,7 @@ import Head from 'next/head';
 import { Tree } from '@vx/hierarchy';
 import { hierarchy, stratify } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
-import * as Chain from '../controllers/chainController'
+import * as Block from '../components/block'
 
 export default class ChainPage extends React.Component {
 
@@ -65,22 +65,15 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
-      tree: { name: 'Genesis', type: 'block',
-        children: [{ name: 'A', type: 'block',
-          children: [{ name: 'A1', type: 'user' }, { name: 'A2', type: 'user' }, { name: 'A3', type: 'user' }, { name: 'C', type: 'block',
-              children: [{ name: 'C1', type: 'user'}, {name: 'D', type:'block',
-                  children: [{ name: 'D1', type: 'user' },{ name: 'D2', type: 'user' },{ name: 'D3', type: 'user'}
-                ]
-              }]
-            },
-          ]},
-        ],
-      },
-      mockTree: [
+      tree: [
         {name: 'Genesis', type: 'block', parent: ''},
-        {name: 'A', type: 'block', parent: 'Genesis'},
+        {name: 'A', type: 'block', parent: 'Genesis', color: 'yellow'},
         {name: 'A1', type: 'user', parent: 'A'},
-        {name: 'A2', type: 'user', parent: 'A'}
+        {name: 'A2', type: 'user', parent: 'A'},
+        {name: 'B', type: 'block', parent: 'A'},
+        {name: 'C', type: 'block', parent: 'B'},
+        {name: 'C1', type: 'user', parent: 'C'},
+        {name: 'C2', type: 'user', parent: 'C'}
       ]
     }
   }
@@ -114,7 +107,7 @@ export default class ChainPage extends React.Component {
   }
 
   convertToTree = (array) => {
-    return stratify().id(function(d) { return d.name; }).parentId(function(d) { return d.parent; })(array);
+    return hierarchy(stratify().id(function(d) { return d.name; }).parentId(function(d) { return d.parent; })(array));
   }
 
   renderTree = () => {
@@ -129,13 +122,13 @@ export default class ChainPage extends React.Component {
           <Tree
             top={10}
             left={30}
-            root={hierarchy(this.convertToTree(this.state.mockTree))}
+            root={this.convertToTree(this.state.tree)}
             size={[
               800,
               1000
             ]}
-            nodeComponent={Chain.Node}
-            linkComponent={Chain.Link}
+            nodeComponent={Block.Node}
+            linkComponent={Block.Link}
           />
         </svg>
       )
@@ -143,28 +136,15 @@ export default class ChainPage extends React.Component {
 
   logTree = (e) => {
     e.preventDefault();
-    console.log('deepest::stratify', this.findDeepest(this.state.tree));
-    console.log('hierarchy.descendants', this.state.tree);
+    console.log('hierarchy before convert', this.state.tree);
+    console.log('hierarchy after convert', this.convertToTree(this.state.tree));
   }
-
-  findDeepest = (tree) => {
-    let childArray = hierarchy(tree).descendants();
-    for (let x = childArray.length -1; x > 0; x--){
-      if (childArray[x].data.type === 'block'){
-        childArray[x].data.name = 'Aye'
-        return childArray
-      }
-    }
-    return childArray
-  }
-
   addNode = () => {
-
-    let mockTree = this.state.mockTree;
-    mockTree.push({name: 'A3', type: 'user', parent: 'A'})
+    let tree = this.state.tree;
+    tree.push({name: 'A3', type: 'user', parent: 'A'})
     this.setState({
       ...this.state,
-      mockTree
+      tree
     })
   }
 
