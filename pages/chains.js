@@ -8,7 +8,7 @@ import PageContainer from '../components/pageContainer'
 import { Header, Form, Button, Input, Label } from 'semantic-ui-react'
 import Head from 'next/head';
 import { Tree } from '@vx/hierarchy';
-import { hierarchy } from 'd3-hierarchy';
+import { hierarchy, stratify } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
 import * as Chain from '../controllers/chainController'
 
@@ -65,32 +65,23 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
-      tree: {
-        "name": "Genesis",
-        "color": 'blue',
-        "children": [{
-          "name": "A",
-          "children": [
-            { "name": "A1" },
-            { "name": "A2" },
-            { "name": "A3" },
-            { "name": "C",
-              "children": [{
-                "name": "C1",
-              }, {
-                "name": "D",
-                "children": [{
-                  "name": "D1"
-                },{
-                  "name": "D2"
-                },{
-                  "name": "D3"
-                }]
+      tree: { name: 'Genesis', type: 'block',
+        children: [{ name: 'A', type: 'block',
+          children: [{ name: 'A1', type: 'user' }, { name: 'A2', type: 'user' }, { name: 'A3', type: 'user' }, { name: 'C', type: 'block',
+              children: [{ name: 'C1', type: 'user'}, {name: 'D', type:'block',
+                  children: [{ name: 'D1', type: 'user' },{ name: 'D2', type: 'user' },{ name: 'D3', type: 'user'}
+                ]
               }]
             },
           ]},
         ],
-      }
+      },
+      mockTree: [
+        {name: 'Genesis', type: 'block', parent: ''},
+        {name: 'A', type: 'block', parent: 'Genesis'},
+        {name: 'A1', type: 'user', parent: 'A'},
+        {name: 'A2', type: 'user', parent: 'A'}
+      ]
     }
   }
 
@@ -122,6 +113,10 @@ export default class ChainPage extends React.Component {
     return Object.keys(chain).length === 0 && chain.constructor === Object
   }
 
+  convertToTree = (array) => {
+    return stratify().id(function(d) { return d.name; }).parentId(function(d) { return d.parent; })(array);
+  }
+
   renderTree = () => {
     return (<svg width={'100vw'} height={'100vh'}>
           <LinearGradient id="lg" from="#fd9b93" to="#fe6e9e" />
@@ -134,7 +129,7 @@ export default class ChainPage extends React.Component {
           <Tree
             top={10}
             left={30}
-            root={hierarchy(this.state.tree)}
+            root={hierarchy(this.convertToTree(this.state.mockTree))}
             size={[
               800,
               1000
@@ -146,11 +141,29 @@ export default class ChainPage extends React.Component {
       )
   }
 
+  logTree = (e) => {
+    e.preventDefault();
+    console.log('deepest::stratify', this.findDeepest(this.state.tree));
+    console.log('hierarchy.descendants', this.state.tree);
+  }
+
+  findDeepest = (tree) => {
+    let childArray = hierarchy(tree).descendants();
+    for (let x = childArray.length -1; x > 0; x--){
+      if (childArray[x].data.type === 'block'){
+        childArray[x].data.name = 'Aye'
+        return childArray
+      }
+    }
+    return childArray
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
           <Form>
+            <Form.Button content="Log hierarchy" onClick={(e) => this.logTree(e)}/>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
           {this.renderTree()}

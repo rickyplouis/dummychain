@@ -1,6 +1,22 @@
 import { LinkHorizontal } from '@vx/shape'
 import { Group } from '@vx/group'
 
+/**
+      tree: { name: 'Genesis', type: 'block',
+        children: [{ name: 'A', type: 'block',
+          children: [{ name: 'A1', type: 'user' }, { name: 'A2', type: 'user' }, { name: 'A3', type: 'user' }, { name: 'C', type: 'block',
+              children: [{ name: 'C1', type: 'user'}, {name: 'D', type:'block',
+                  children: [{ name: 'D1', type: 'user' },{ name: 'D2', type: 'user' },{ name: 'D3', type: 'user'}
+                ]
+              }]
+            },
+          ]},
+        ],
+      }
+**/
+
+
+
 var chain = {
   Node({node, events}){
     let width = 40;
@@ -26,7 +42,7 @@ var chain = {
             strokeOpacity={!node.children ? .6 : 1}
             rx={!node.children ? 10 : 0}
             onClick={() => {
-              alert(`clicked: ${JSON.stringify(node.data.name)} Node`)
+              alert(`clicked: ${JSON.stringify(node.data.id)} Node`)
             }}
             onMouseOver={(e, f) => {
               console.log('e.target', e.target)
@@ -41,7 +57,7 @@ var chain = {
           style={{ pointerEvents: "none" }}
           fill={node.depth === 0 ? "#71248e" : node.children ? "white" : "#26deb0"}
         >
-          {node.data.name}
+          {node.data.id}
         </text>
       </Group>
     );
