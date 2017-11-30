@@ -158,6 +158,16 @@ export default class ChainPage extends React.Component {
     return childArray
   }
 
+  addNode = () => {
+
+    let mockTree = this.state.mockTree;
+    mockTree.push({name: 'A3', type: 'user', parent: 'A'})
+    this.setState({
+      ...this.state,
+      mockTree
+    })
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
