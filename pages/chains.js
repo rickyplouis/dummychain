@@ -121,7 +121,7 @@ export default class ChainPage extends React.Component {
           <Tree
             top={10}
             left={30}
-            root={this.convertToTree(this.state.tree)}
+            root={this.convertToTree(this.state.chain.tree)}
             size={[
               800,
               1000
@@ -133,28 +133,31 @@ export default class ChainPage extends React.Component {
       )
   }
 
-  logTree = (e) => {
+  logChain = (e) => {
     e.preventDefault();
-    console.log('hierarchy before convert', this.state.tree);
-    console.log('hierarchy after convert', this.convertToTree(this.state.tree));
+    console.log('this.state.chain.tree', this.state.chain.tree);
   }
 
   findDeepestBlock = () => {
-    for (let x = this.state.tree.length - 1; x > -1; x--){
-      if (this.state.tree[x].type === 'block'){
-        return this.state.tree[x]
+    for (let x = this.state.chain.tree.length - 1; x > -1; x--){
+      if (this.state.chain.tree[x].type === 'block'){
+        return this.state.chain.tree[x]
       }
     }
   }
 
   addNode = () => {
     this.findDeepestBlock()
-    let tree = this.state.tree;
+    let tree = this.state.chain.tree;
     tree.push({name: 'Rando block' + parseInt(Math.random() * 1000), type: 'block', parent: this.findDeepestBlock().name})
     this.setState({
       ...this.state,
-      tree
+      chain: {
+        tree,
+        ...this.state.chain
+      }
     })
+    this.socket.emit('updateChain', this.state.chain)
   }
 
   renderChain = () => {
@@ -162,7 +165,7 @@ export default class ChainPage extends React.Component {
         <div style={{margin: '0 auto', display: 'table'}}>
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
           <Form>
-            <Form.Button content="Log hierarchy" onClick={(e) => this.logTree(e)}/>
+            <Form.Button content="Log Chain" onClick={(e) => this.logChain(e)}/>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
           {this.renderTree()}

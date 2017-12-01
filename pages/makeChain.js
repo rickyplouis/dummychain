@@ -53,6 +53,16 @@ export default class MakeChain extends Component {
       createdAt: new Date(),
       chainName: this.state.chainName,
       agenda: this.state.agenda,
+      tree: [
+          {name: 'Genesis', type: 'block', parent: ''},
+          {name: 'A', type: 'block', parent: 'Genesis', color: 'yellow'},
+          {name: 'A1', type: 'user', parent: 'A'},
+          {name: 'A2', type: 'user', parent: 'A'},
+          {name: 'B', type: 'block', parent: 'A'},
+          {name: 'C', type: 'block', parent: 'B'},
+          {name: 'C1', type: 'user', parent: 'C'},
+          {name: 'C2', type: 'user', parent: 'C'}
+        ]
     }
   }
 
