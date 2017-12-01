@@ -4,9 +4,14 @@ import { withTooltip, Tooltip } from '@vx/tooltip';
 
 import { Button, Popup } from 'semantic-ui-react'
 
+function nodeIsBlock(inputNode){
+  return inputNode.data.data.type === 'block'
+}
+
 function renderNode(node) {
   let width = 40;
   let height = 20;
+
   return (
         <Group top={node.x} left={node.y}>
           {node.depth === 0 &&
@@ -22,16 +27,17 @@ function renderNode(node) {
               y={-height / 2}
               x={-width / 2}
               fill={"#272b4d"}
-              stroke={node.children ? "pink": "#26deb0"}
+              stroke={nodeIsBlock(node)? "pink": "#26deb0"}
               strokeWidth={1}
-              strokeDasharray={!node.children ? "2,2" : "0"}
-              strokeOpacity={!node.children ? .6 : 1}
-              rx={!node.children ? 10 : 0}
+              strokeDasharray={!nodeIsBlock(node) ? "2,2" : "0"}
+              strokeOpacity={nodeIsBlock(node) ? .6 : 1}
+              rx={!nodeIsBlock(node) ? 10 : 0}
               onClick={() => {
                 alert(`clicked: ${JSON.stringify(node.data.id)} Node`)
               }}
               onMouseOver={(e) => {
                 e.preventDefault()
+                console.log('node', node);
                 console.log('withTooltip', withTooltip);
                 console.log('e.target', e.target)
               }}
@@ -46,7 +52,7 @@ function renderNode(node) {
             fontFamily="Arial"
             textAnchor={"middle"}
             style={{ pointerEvents: "none" }}
-            fill={node.depth === 0 ? "#71248e" : node.children ? "white" : "#26deb0"}
+            fill={node.depth === 0 ? "#71248e" : nodeIsBlock(node)? "white" : "#26deb0"}
             >
             {node.data.id}
           </text>

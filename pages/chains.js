@@ -138,9 +138,19 @@ export default class ChainPage extends React.Component {
     console.log('hierarchy before convert', this.state.tree);
     console.log('hierarchy after convert', this.convertToTree(this.state.tree));
   }
+
+  findDeepestBlock = () => {
+    for (let x = this.state.tree.length - 1; x > -1; x--){
+      if (this.state.tree[x].type === 'block'){
+        return this.state.tree[x]
+      }
+    }
+  }
+
   addNode = () => {
+    this.findDeepestBlock()
     let tree = this.state.tree;
-    tree.push({name: 'A3', type: 'user', parent: 'A'})
+    tree.push({name: 'Rando block' + parseInt(Math.random() * 1000), type: 'block', parent: this.findDeepestBlock().name})
     this.setState({
       ...this.state,
       tree
