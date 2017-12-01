@@ -11,7 +11,6 @@ import { Tree } from '@vx/hierarchy';
 import { hierarchy, stratify } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
 import * as Block from '../components/block'
-
 export default class ChainPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
