@@ -66,9 +66,18 @@ var chain = {
       return (
           <Popup
             trigger={renderNode(node)}
-            content={`Node name: ${node.data.id}`}
             basic
-          />
+            inverted
+          >
+          <Popup.Header>
+            Block Data
+          </Popup.Header>
+          <Popup.Content>
+            <pre>
+              name: {node.data.id},<br/>type: {node.data.data.type},<br/>parent: {node.data.data.parent},<br/>hash: {node.data.data.hash},<br/>prevHash: {node.data.data.prevHash}
+            </pre>
+          </Popup.Content>
+          </Popup>
       );
   },
   Link({ link }){

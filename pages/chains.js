@@ -11,6 +11,9 @@ import { Tree } from '@vx/hierarchy';
 import { hierarchy, stratify } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
 import * as Block from '../components/block'
+
+const uuidv1 = require('uuid/v1');
+
 export default class ChainPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -146,10 +149,21 @@ export default class ChainPage extends React.Component {
     }
   }
 
+  makeBlock = () => {
+    let deepestBlock = this.findDeepestBlock()
+    return {
+      name: 'blk' + parseInt(Math.random() * 1000),
+      type: 'block',
+      parent: deepestBlock.name,
+      hash: uuidv1(),
+      prevHash: deepestBlock.hash
+    }
+  }
+
   addNode = () => {
     this.findDeepestBlock()
     let tree = this.state.chain.tree;
-    tree.push({name: 'Rando block' + parseInt(Math.random() * 1000), type: 'block', parent: this.findDeepestBlock().name})
+    tree.push(this.makeBlock());
     this.setState({
       ...this.state,
       chain: {
