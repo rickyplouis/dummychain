@@ -113,10 +113,10 @@ export default class ChainPage extends React.Component {
   }
 
   renderTree = () => {
-    return (<svg width={'100vw'} height={'100vh'}>
+    return (<svg width={'80vw'} height={'100vh'}>
           <LinearGradient id="lg" from="#fd9b93" to="#fe6e9e" />
           <rect
-            width={'100vw'}
+            width={'80vw'}
             height={'100vh'}
             rx={14}
             fill="#272b4d"
@@ -174,6 +174,11 @@ export default class ChainPage extends React.Component {
     this.socket.emit('updateChain', this.state.chain)
   }
 
+  renderUsers = () => {
+    console.log('this.state.users', this.state.chain.users);
+    return this.state.chain.users.map( (user) => <div>Username: {user.username}</div>)
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
@@ -182,15 +187,35 @@ export default class ChainPage extends React.Component {
             <Form.Button content="Log Chain" onClick={(e) => this.logChain(e)}/>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
           </Form>
-          {this.renderTree()}
+          <div style={{width: '100vw', height: '100vh', display: 'flex'}}>
+            <div style={{width: '80vw', height: '100vh'}}>
+              {this.renderTree()}
+            </div>
+            <div style={{width: '20vw', height: '100vh'}}>
+              <div>
+                <Header as="h2">
+                  Enter user info in this container at 20vw
+                </Header>
+                { this.renderUsers() }
+              </div>
+            </div>
+          </div>
         </div>
       )
   }
 
   connectUser = () => {
+    let users = this.state.chain.users;
+    users.push({ id: uuidv1(), username: this.state.username})
     this.setState({
-      userConnected: true
+      ...this.state,
+      userConnected: true,
+      chain: {
+        users,
+        ...this.state.chain
+      }
     })
+    this.socket.emit('updateChain', this.state.chain)
   }
 
   submitEntranceForm = (e) => {

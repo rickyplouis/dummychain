@@ -62,7 +62,8 @@ export default class MakeChain extends Component {
           {name: 'C', type: 'block', parent: 'B'},
           {name: 'C1', type: 'user', parent: 'C'},
           {name: 'C2', type: 'user', parent: 'C'}
-        ]
+      ],
+      users: []
     }
   }
 
