@@ -67,16 +67,6 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
-      tree: [
-        {name: 'Genesis', type: 'block', parent: ''},
-        {name: 'A', type: 'block', parent: 'Genesis', color: 'yellow'},
-        {name: 'A1', type: 'user', parent: 'A'},
-        {name: 'A2', type: 'user', parent: 'A'},
-        {name: 'B', type: 'block', parent: 'A'},
-        {name: 'C', type: 'block', parent: 'B'},
-        {name: 'C1', type: 'user', parent: 'C'},
-        {name: 'C2', type: 'user', parent: 'C'}
-      ]
     }
   }
 
@@ -149,11 +139,14 @@ export default class ChainPage extends React.Component {
     }
   }
 
-  makeBlock = () => {
-    let deepestBlock = this.findDeepestBlock()
+  makeUsers = (deepestBlock, type) => {
+    return this.state.chain.users.map( (user) => this.makeBlock(deepestBlock, type, user.username + parseInt(Math.random() * 1000)))
+  }
+
+  makeBlock = (deepestBlock, type, name) => {
     return {
-      name: 'blk' + parseInt(Math.random() * 1000),
-      type: 'block',
+      name: name,
+      type: type,
       parent: deepestBlock.name,
       hash: uuidv1(),
       prevHash: deepestBlock.hash
@@ -161,9 +154,17 @@ export default class ChainPage extends React.Component {
   }
 
   addNode = () => {
-    this.findDeepestBlock()
-    let tree = this.state.chain.tree;
-    tree.push(this.makeBlock());
+    let tree = this.state.chain.tree,
+        deepestBlock = this.findDeepestBlock(),
+        newBlock = this.makeBlock(deepestBlock, 'block', 'blk' + parseInt(Math.random() * 1000)),
+        newUsers = this.makeUsers(newBlock, 'user');
+
+    console.log('addNode::newUsers', newUsers );
+    tree.push(newBlock);
+    for (let user of this.state.chain.users){
+      tree.push(this.makeBlock(newBlock, 'user', user.username + parseInt(Math.random() * 1000)))
+    }
+
     this.setState({
       ...this.state,
       chain: {
@@ -171,11 +172,11 @@ export default class ChainPage extends React.Component {
         ...this.state.chain
       }
     })
+    console.log('this.state.chain.tree', this.state.chain.tree);
     this.socket.emit('updateChain', this.state.chain)
   }
 
   renderUsers = () => {
-    console.log('this.state.users', this.state.chain.users);
     return this.state.chain.users.map( (user) => <div>Username: {user.username}</div>)
   }
 
