@@ -22,7 +22,7 @@ export default class ChainPage extends React.Component {
   }
 
   static async getInitialProps ({ query: { id } }) {
-    const appUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/chains' : 'https://robertrules.io/chains';
+    const appUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/chains' : 'https://learnthechain.com/chains';
     const response = await fetch(appUrl)
     const chains = await response.json()
     return { chains }
@@ -131,11 +131,6 @@ export default class ChainPage extends React.Component {
       )
   }
 
-  logChain = (e) => {
-    e.preventDefault();
-    console.log('this.state.chain.tree', this.state.chain.tree);
-  }
-
   findDeepestBlock = () => {
     for (let x = this.state.chain.tree.length - 1; x > -1; x--){
       if (this.state.chain.tree[x].type === 'block'){
@@ -207,7 +202,7 @@ export default class ChainPage extends React.Component {
       this.addNode()
       this.changeTimerPercent(0)
     } else {
-      this.changeTimerPercent(this.state.chain.timer.percent + 10)
+      this.changeTimerPercent(this.state.chain.timer.percent + this.state.chain.users.length)
     }
   }
 
@@ -259,10 +254,6 @@ export default class ChainPage extends React.Component {
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
           <Progress percent={this.state.chain.timer.percent} indicating label="Mining Block" />
           {this.renderTimerButtons()}
-          <Form>
-            <Form.Button content="Log Chain" onClick={(e) => this.logChain(e)}/>
-            <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
-          </Form>
           <div style={{width: '100vw', height: '100vh', display: 'flex'}}>
             <div style={{width: '80vw', height: '100vh'}}>
               {this.renderTree()}
