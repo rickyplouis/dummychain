@@ -59,7 +59,8 @@ export default class MakeChain extends Component {
       users: [],
       timer: {
         percent: 0,
-        isRunning: false
+        isRunning: false,
+        intervalId: null
       }
     }
   }

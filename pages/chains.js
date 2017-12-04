@@ -67,13 +67,8 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
-      timer: {
-        percent: 0,
-        isRunning: false
-      }
     }
-
-    this.intervalId = null;
+    this.intervalId = this.state.chain.timer.intervalId
     this.increment = this.increment.bind(this);
   }
 
@@ -97,6 +92,7 @@ export default class ChainPage extends React.Component {
   handleUsername = (event) => {
     event.preventDefault();
     this.setState({
+      ...this.state,
       username: event.target.value
     })
   }
@@ -183,51 +179,81 @@ export default class ChainPage extends React.Component {
   changeTimerPercent = (percent) => {
     this.setState({
       ...this.state,
-      timer: {
-        ...this.state.timer,
-        percent
+      chain: {
+        ...this.state.chain,
+        timer: {
+          ...this.state.chain.timer,
+          percent
+        }
       }
     })
+    this.socket.emit('updateChain', this.state.chain)
   }
 
   changeTimerStatus = (isRunning) => {
     this.setState({
       ...this.state,
       timer: {
-        ...this.state.timer,
+        ...this.state.chain.timer,
         isRunning
       }
     })
   }
 
   increment = () => {
-    if (this.state.timer.percent >= 100){
+    if (this.state.chain.timer.percent >= 100){
       this.addNode()
       this.changeTimerPercent(0)
     } else {
-      this.changeTimerPercent(this.state.timer.percent + 10)
+      this.changeTimerPercent(this.state.chain.timer.percent + 10)
     }
   }
 
   startTimer = () => {
-    this.changeTimerStatus(true);
-    this.intervalId = setInterval(this.increment.bind(this), 1000);
+//    this.changeTimerStatus(true);
+    this.setState({
+      ...this.state,
+      chain: {
+        ...this.state.chain,
+        timer: {
+          ...this.state.chain.timer,
+          isRunning: true,
+          intervalId: setInterval(this.increment.bind(this), 1000)
+        }
+      }
+    }, () => {
+      this.intervalId = this.state.chain.timer.intervalId
+      this.socket.emit('updateChain', this.state.chain)
+    })
   }
 
   stopTimer = () => {
-    this.changeTimerStatus(false);
-    clearInterval(this.intervalId);
+//    this.changeTimerStatus(false);
+    this.setState({
+      ...this.state,
+      chain: {
+        ...this.state.chain,
+        timer: {
+          ...this.state.chain.timer,
+          isRunning: false,
+          intervalId: clearInterval(this.intervalId)
+        }
+      }
+    }, () => {
+      clearInterval(this.intervalId)
+      this.socket.emit('updateChain', this.state.chain)
+    })
   }
 
   renderTimerButtons = () => {
-    return !this.state.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <Button onClick={this.stopTimer}>Stop Mining</Button>
+    return !this.state.chain.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <Button onClick={this.stopTimer}>Stop Mining</Button>
   }
 
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
-          <Progress percent={this.state.timer.percent} indicating label="Mining Block" />
+          <Progress percent={this.state.chain.timer.percent} indicating label="Mining Block" />
           {this.renderTimerButtons()}
           <Form>
             <Form.Button content="Log Chain" onClick={(e) => this.logChain(e)}/>
