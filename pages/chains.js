@@ -70,6 +70,8 @@ export default class ChainPage extends React.Component {
     }
     this.intervalId = this.state.chain.timer.intervalId
     this.increment = this.increment.bind(this);
+    this.startTimer = this.startTimer.bind(this);
+    this.stopTimer = this.stopTimer.bind(this);
   }
 
   updateChain = (e) => {
@@ -223,6 +225,7 @@ export default class ChainPage extends React.Component {
       }
     }, () => {
       this.intervalId = this.state.chain.timer.intervalId
+      console.log('startTimer::intervalId', this.intervalId);
       this.socket.emit('updateChain', this.state.chain)
     })
   }
@@ -241,6 +244,7 @@ export default class ChainPage extends React.Component {
       }
     }, () => {
       clearInterval(this.intervalId)
+      console.log('stopTimer::intervalId', this.intervalId);
       this.socket.emit('updateChain', this.state.chain)
     })
   }
