@@ -177,7 +177,7 @@ export default class ChainPage extends React.Component {
   }
 
   renderUsers = () => {
-    return this.state.chain.users.map( (user) => <div>Username: {user.username}</div>)
+    return this.state.chain.users.map( (user) => <Header as="h3" color="purple">{user.username}</Header>)
   }
 
   renderChain = () => {
@@ -192,10 +192,10 @@ export default class ChainPage extends React.Component {
             <div style={{width: '80vw', height: '100vh'}}>
               {this.renderTree()}
             </div>
-            <div style={{width: '20vw', height: '100vh'}}>
+            <div style={{width: '20vw', height: '100vh', textAlign: 'left', marginLeft: '5vw'}}>
               <div>
                 <Header as="h2">
-                  Enter user info in this container at 20vw
+                  Users
                 </Header>
                 { this.renderUsers() }
               </div>
