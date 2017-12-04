@@ -56,7 +56,11 @@ export default class MakeChain extends Component {
       tree: [
           {name: 'Genesis', type: 'block', parent: '', hash: uuidv1()},
       ],
-      users: []
+      users: [],
+      timer: {
+        percent: 0,
+        isRunning: false
+      }
     }
   }
 

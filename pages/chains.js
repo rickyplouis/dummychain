@@ -184,46 +184,42 @@ export default class ChainPage extends React.Component {
     return this.state.chain.users.map( (user) => <Header as="h3" color="purple">{user.username}</Header>)
   }
 
+  changeTimerPercent = (percent) => {
+    this.setState({
+      ...this.state,
+      timer: {
+        ...this.state.timer,
+        percent
+      }
+    })
+  }
+
+  changeTimerStatus = (isRunning) => {
+    this.setState({
+      ...this.state,
+      timer: {
+        ...this.state.timer,
+        isRunning
+      }
+    })
+  }
+
   increment = () => {
     if (this.state.timer.percent >= 100){
       this.addNode()
-      this.setState({
-        ...this.state,
-        timer: {
-          ...this.state.timer,
-          percent: 0,
-        }
-      })
+      this.changeTimerPercent(0)
     } else {
-      this.setState({
-        ...this.state,
-        timer: {
-          ...this.state.timer,
-          percent: this.state.timer.percent + 10,
-        }
-      })
+      this.changeTimerPercent(this.state.timer.percent + 10)
     }
   }
 
   startTimer = () => {
-    this.setState({
-      ...this.state,
-      timer: {
-        ...this.state.timer,
-        isRunning: true
-      }
-    })
+    this.changeTimerStatus(true);
     this.intervalId = setInterval(this.increment.bind(this), 1000);
   }
 
   stopTimer = () => {
-    this.setState({
-      ...this.state,
-      timer: {
-        ...this.state.timer,
-        isRunning: false
-      }
-    })
+    this.changeTimerStatus(false);
     clearInterval(this.intervalId);
   }
 
