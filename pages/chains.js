@@ -146,9 +146,6 @@ export default class ChainPage extends React.Component {
     }
   }
 
-  makeUsers = (deepestBlock, type) => {
-    return this.state.chain.users.map( (user) => this.makeBlock(deepestBlock, type, user.username + parseInt(Math.random() * 1000)))
-  }
 
   makeBlock = (deepestBlock, type, name) => {
     return {
@@ -162,12 +159,11 @@ export default class ChainPage extends React.Component {
   addNode = () => {
     let tree = this.state.chain.tree,
         deepestBlock = this.findDeepestBlock(),
-        newBlock = this.makeBlock(deepestBlock, 'block', 'blk' + parseInt(Math.random() * 1000)),
-        newUsers = this.makeUsers(newBlock, 'user');
+        newBlock = this.makeBlock(deepestBlock, 'block', 'block' + parseInt(Math.random() * 1000))
 
     tree.push(newBlock);
     for (let user of this.state.chain.users){
-      tree.push(this.makeBlock(newBlock, 'user', user.username + parseInt(Math.random() * 1000)))
+      tree.push(this.makeBlock(newBlock, 'user', user.username))
     }
 
     this.setState({
