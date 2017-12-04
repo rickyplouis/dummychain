@@ -54,7 +54,7 @@ export default class MakeChain extends Component {
       chainName: this.state.chainName,
       agenda: this.state.agenda,
       tree: [
-          {name: 'Genesis', type: 'block', parent: '', hash: uuidv1(), prevHash: ''},
+          {name: 'Genesis', type: 'block', parent: '', hash: uuidv1()},
       ],
       users: []
     }

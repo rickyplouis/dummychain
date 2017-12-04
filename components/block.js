@@ -54,7 +54,7 @@ function renderNode(node) {
             style={{ pointerEvents: "none" }}
             fill={node.depth === 0 ? "#71248e" : nodeIsBlock(node)? "white" : "#26deb0"}
             >
-            {node.data.id}
+            {node.data.data.name}
           </text>
         </Group>
   )
@@ -74,7 +74,7 @@ var chain = {
           </Popup.Header>
           <Popup.Content>
             <pre>
-              name: {node.data.id},<br/>type: {node.data.data.type},<br/>parent: {node.data.data.parent},<br/>hash: {node.data.data.hash},<br/>prevHash: {node.data.data.prevHash}
+              name: {node.data.data.name},<br/>type: {node.data.data.type},<br/>parent: {node.data.data.parent},<br/>hash: {node.data.data.hash}
             </pre>
           </Popup.Content>
           </Popup>

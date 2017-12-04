@@ -99,7 +99,7 @@ export default class ChainPage extends React.Component {
   }
 
   convertToTree = (array) => {
-    return hierarchy(stratify().id(function(d) { return d.name; }).parentId(function(d) { return d.parent; })(array));
+    return hierarchy(stratify().id(function(d) { return d.hash; }).parentId(function(d) { return d.parent; })(array));
   }
 
   renderTree = () => {
@@ -147,9 +147,8 @@ export default class ChainPage extends React.Component {
     return {
       name: name,
       type: type,
-      parent: deepestBlock.name,
-      hash: uuidv1(),
-      prevHash: deepestBlock.hash
+      parent: deepestBlock.hash,
+      hash: uuidv1()
     }
   }
 
