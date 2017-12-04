@@ -5,7 +5,7 @@ import io from 'socket.io-client'
 
 import PageContainer from '../components/pageContainer'
 
-import { Header, Form, Button, Input, Label } from 'semantic-ui-react'
+import { Header, Form, Button, Input, Label, Progress } from 'semantic-ui-react'
 import Head from 'next/head';
 import { Tree } from '@vx/hierarchy';
 import { hierarchy, stratify } from 'd3-hierarchy';
@@ -67,7 +67,14 @@ export default class ChainPage extends React.Component {
       id: this.props.url.query.id,
       username: '',
       userConnected: false,
+      timer: {
+        percent: 0,
+        isRunning: false
+      }
     }
+
+    this.intervalId = null;
+    this.increment = this.increment.bind(this);
   }
 
   updateChain = (e) => {
@@ -158,7 +165,6 @@ export default class ChainPage extends React.Component {
         newBlock = this.makeBlock(deepestBlock, 'block', 'blk' + parseInt(Math.random() * 1000)),
         newUsers = this.makeUsers(newBlock, 'user');
 
-    console.log('addNode::newUsers', newUsers );
     tree.push(newBlock);
     for (let user of this.state.chain.users){
       tree.push(this.makeBlock(newBlock, 'user', user.username + parseInt(Math.random() * 1000)))
@@ -171,7 +177,6 @@ export default class ChainPage extends React.Component {
         ...this.state.chain
       }
     })
-    console.log('this.state.chain.tree', this.state.chain.tree);
     this.socket.emit('updateChain', this.state.chain)
   }
 
@@ -179,10 +184,59 @@ export default class ChainPage extends React.Component {
     return this.state.chain.users.map( (user) => <Header as="h3" color="purple">{user.username}</Header>)
   }
 
+  increment = () => {
+    if (this.state.timer.percent >= 100){
+      this.addNode()
+      this.setState({
+        ...this.state,
+        timer: {
+          ...this.state.timer,
+          percent: 0,
+        }
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        timer: {
+          ...this.state.timer,
+          percent: this.state.timer.percent + 10,
+        }
+      })
+    }
+  }
+
+  startTimer = () => {
+    this.setState({
+      ...this.state,
+      timer: {
+        ...this.state.timer,
+        isRunning: true
+      }
+    })
+    this.intervalId = setInterval(this.increment.bind(this), 1000);
+  }
+
+  stopTimer = () => {
+    this.setState({
+      ...this.state,
+      timer: {
+        ...this.state.timer,
+        isRunning: false
+      }
+    })
+    clearInterval(this.intervalId);
+  }
+
+  renderTimerButtons = () => {
+    return !this.state.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <Button onClick={this.stopTimer}>Stop Mining</Button>
+  }
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
           <Header as="h2">In Chain {this.state.chain.chainName}</Header>
+          <Progress percent={this.state.timer.percent} indicating label="Mining Block" />
+          {this.renderTimerButtons()}
           <Form>
             <Form.Button content="Log Chain" onClick={(e) => this.logChain(e)}/>
             <Form.Button content="Add Node" onClick={(e) => this.addNode(e)}/>
