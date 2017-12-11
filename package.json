@@ -1,5 +1,5 @@
 {
-  "name": "dummychain",
+  "name": "learnthechain",
   "version": "1.0.0",
   "dependencies": {
     "@vx/gradient": "0.0.143",
