@@ -13,9 +13,6 @@ import { LinearGradient } from '@vx/gradient';
 import * as Block from '../components/block'
 import * as Controller from '../controllers/chainController'
 
-import User from '../components/user'
-import UserContainer from '../components/userContainer'
-
 const uuidv1 = require('uuid/v1');
 
 const MineButton = (props) => <Button onClick={props.onClick}>Begin Mining</Button>
@@ -146,7 +143,7 @@ export default class ChainPage extends React.Component {
   }
 
   renderUsers = () => {
-    return this.state.chain.users.map( (user) => <User name={user.username}/>)
+    return this.state.chain.users.map( (user, index) => <Header key={index} as="h3" color="purple">{user.username}</Header>)
   }
 
   changeTimerPercent = (percent) => {
@@ -238,9 +235,14 @@ export default class ChainPage extends React.Component {
             <div style={{width: '80vw', height: '100vh'}}>
               {this.renderTree()}
             </div>
-            <UserContainer>
-              {this.renderUsers()}
-            </UserContainer>
+            <div style={{width: '20vw', height: '100vh', textAlign: 'left', marginLeft: '5vw'}}>
+              <div>
+                <Header as="h2">
+                  Users
+                </Header>
+                {this.renderUsers()}
+              </div>
+            </div>
           </div>
         </div>
       )
