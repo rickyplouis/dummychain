@@ -15,6 +15,14 @@ import * as Controller from '../controllers/chainController'
 
 const uuidv1 = require('uuid/v1');
 
+const User = (props) => <Header as="h3" color="purple">{props.name}</Header>
+
+const MineButton = (props) => <Button onClick={props.onClick}>Begin Mining</Button>
+
+// when calling this use onClick => this.stopTimer
+const stopButton = (props) => <Button onClick={props.onClick}>Stop Mining</Button>
+const JoinText = () => <Header as="h2"> Enter your name to join</Header>
+
 export default class ChainPage extends React.Component {
 
   componentWillReceiveProps(nextProps) {
@@ -123,20 +131,13 @@ export default class ChainPage extends React.Component {
       )
   }
 
-  addNode = () => {
-    let tree = this.state.chain.tree,
-        deepestBlock = Controller.findDeepestBlock(tree),
-        newBlock = Controller.makeBlock(deepestBlock, 'block', 'block' + parseInt(Math.random() * 1000))
 
-    tree.push(newBlock);
-    for (let user of this.state.chain.users){
-      tree.push(Controller.makeBlock(newBlock, 'user', user.username))
-    }
-
+  // chain => this.state.chain
+  addNode = (chain) => {
     this.setState({
       ...this.state,
       chain: {
-        tree,
+        tree: Controller.makeNewTree(chain),
         ...this.state.chain
       }
     })
@@ -144,7 +145,7 @@ export default class ChainPage extends React.Component {
   }
 
   renderUsers = () => {
-    return this.state.chain.users.map( (user) => <Header as="h3" color="purple">{user.username}</Header>)
+    return this.state.chain.users.map( (user) => <User name={user.username}/>)
   }
 
   changeTimerPercent = (percent) => {
@@ -173,7 +174,7 @@ export default class ChainPage extends React.Component {
 
   increment = () => {
     if (this.state.chain.timer.percent >= 100){
-      this.addNode()
+      this.addNode(this.state.chain)
       this.changeTimerPercent(0)
     } else {
       this.changeTimerPercent(this.state.chain.timer.percent + this.state.chain.users.length)
@@ -219,13 +220,10 @@ export default class ChainPage extends React.Component {
   }
 
 
-  //TODO: Replace currently mining with stop mining button down the road
-  stopMiningButton = () => {
-    return <Button onClick={this.stopTimer}>Stop Mining</Button>
-  }
 
+  //TODO: Replace currently mining with stop mining button down the road
   renderTimerButtons = () => {
-    return !this.state.chain.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <div>Currently Mining.</div>
+    return !this.state.chain.timer.isRunning ? <MineButton onClick={this.startTimer} /> : <div>Currently Mining.</div>
   }
 
   renderChain = () => {
@@ -274,14 +272,10 @@ export default class ChainPage extends React.Component {
     return this.state.username.length === 0;
   }
 
-  renderJoinText = () => {
-    return (<Header as="h2"> Enter your name to join</Header>)
-  }
-
   renderEntranceForm(){
     return (
       <div style={{margin: '0 auto', display: 'table'}}>
-        {this.renderJoinText()}
+        <JoinText/>
         <Form size={'tiny'} onSubmit={(e) => this.submitEntranceForm(e)} >
           <Form.Group>
             <Form.Input placeholder='Enter your name' name='name' value={this.state.username} onChange={ (e) => this.handleUsername(e)} />
