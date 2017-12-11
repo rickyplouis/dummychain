@@ -1,6 +1,6 @@
 import React from 'react'
 import Router from 'next/router'
-import { Button, Header, Container } from 'semantic-ui-react'
+import { Button, Header, Container, Icon } from 'semantic-ui-react'
 
 import PageContainer from '../components/pageContainer'
 
@@ -23,14 +23,11 @@ export default class HomePage extends React.Component {
     return (
       <PageContainer>
         <div style={{marginTop: '10vh'}}>
-          <Header as="h2">Learn The Chain</Header>
-          <Header as="h3">Simple web visualization of Blockchain</Header>
+          <Header as="h1" color={'purple'}>Learn The Chain <Icon name="chain" color={'black'}/></Header>
+          <Header as="h2">Simple web visualization of Blockchain</Header>
           <br/>
-          <Button onClick={() => handler('/makeChain')}>Make A Chain</Button>
-          <Button onClick={() => handler('/joinRoom')}>Join A Chain</Button>
-        </div>
-        <div>
-          <Header as="h4">some more stuff abuot the chain</Header>
+          <Button basic color={"purple"} onClick={() => handler('/makeChain')}>Make A Chain</Button>
+          <Button basic color={"black"} onClick={() => handler('/joinRoom')}>Join A Chain</Button>
         </div>
       </PageContainer>
     )
