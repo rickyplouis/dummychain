@@ -30,5 +30,5 @@ Install it and run:
 
 ```
 $ npm install
-$ [PORT=XXXX] node server
+$ [PORT=XXXX] node server.js
 ```
