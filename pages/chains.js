@@ -99,14 +99,6 @@ export default class ChainPage extends React.Component {
     })
   }
 
-  chainIsEmpty = (chain) => {
-    return Object.keys(chain).length === 0 && chain.constructor === Object
-  }
-
-  convertToTree = (array) => {
-    return hierarchy(stratify().id(function(d) { return d.hash; }).parentId(function(d) { return d.parent; })(array));
-  }
-
   renderTree = () => {
     return (<svg width={'80vw'} height={'100vh'}>
           <LinearGradient id="lg" from="#fd9b93" to="#fe6e9e" />
@@ -119,7 +111,7 @@ export default class ChainPage extends React.Component {
           <Tree
             top={10}
             left={30}
-            root={this.convertToTree(this.state.chain.tree)}
+            root={Controller.convertToTree(this.state.chain.tree)}
             size={[
               800,
               1000
@@ -131,32 +123,14 @@ export default class ChainPage extends React.Component {
       )
   }
 
-  findDeepestBlock = () => {
-    for (let x = this.state.chain.tree.length - 1; x > -1; x--){
-      if (this.state.chain.tree[x].type === 'block'){
-        return this.state.chain.tree[x]
-      }
-    }
-  }
-
-
-  makeBlock = (deepestBlock, type, name) => {
-    return {
-      name: name,
-      type: type,
-      parent: deepestBlock.hash,
-      hash: uuidv1()
-    }
-  }
-
   addNode = () => {
     let tree = this.state.chain.tree,
-        deepestBlock = this.findDeepestBlock(),
-        newBlock = this.makeBlock(deepestBlock, 'block', 'block' + parseInt(Math.random() * 1000))
+        deepestBlock = Controller.findDeepestBlock(tree),
+        newBlock = Controller.makeBlock(deepestBlock, 'block', 'block' + parseInt(Math.random() * 1000))
 
     tree.push(newBlock);
     for (let user of this.state.chain.users){
-      tree.push(this.makeBlock(newBlock, 'user', user.username))
+      tree.push(Controller.makeBlock(newBlock, 'user', user.username))
     }
 
     this.setState({
