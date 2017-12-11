@@ -13,9 +13,10 @@ import { LinearGradient } from '@vx/gradient';
 import * as Block from '../components/block'
 import * as Controller from '../controllers/chainController'
 
-const uuidv1 = require('uuid/v1');
+import User from '../components/user'
+import UserContainer from '../components/userContainer'
 
-const User = (props) => <Header as="h3" color="purple">{props.name}</Header>
+const uuidv1 = require('uuid/v1');
 
 const MineButton = (props) => <Button onClick={props.onClick}>Begin Mining</Button>
 
@@ -226,6 +227,7 @@ export default class ChainPage extends React.Component {
     return !this.state.chain.timer.isRunning ? <MineButton onClick={this.startTimer} /> : <div>Currently Mining.</div>
   }
 
+
   renderChain = () => {
       return (
         <div style={{margin: '0 auto', display: 'table'}}>
@@ -236,14 +238,9 @@ export default class ChainPage extends React.Component {
             <div style={{width: '80vw', height: '100vh'}}>
               {this.renderTree()}
             </div>
-            <div style={{width: '20vw', height: '100vh', textAlign: 'left', marginLeft: '5vw'}}>
-              <div>
-                <Header as="h2">
-                  Users
-                </Header>
-                { this.renderUsers() }
-              </div>
-            </div>
+            <UserContainer>
+              {this.renderUsers()}
+            </UserContainer>
           </div>
         </div>
       )
