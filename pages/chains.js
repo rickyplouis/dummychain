@@ -11,6 +11,7 @@ import { Tree } from '@vx/hierarchy';
 import { hierarchy, stratify } from 'd3-hierarchy';
 import { LinearGradient } from '@vx/gradient';
 import * as Block from '../components/block'
+import * as Controller from '../controllers/chainController'
 
 const uuidv1 = require('uuid/v1');
 
@@ -68,7 +69,6 @@ export default class ChainPage extends React.Component {
       username: '',
       userConnected: false,
     }
-    this.intervalId = this.state.chain.timer.intervalId
     this.increment = this.increment.bind(this);
     this.startTimer = this.startTimer.bind(this);
     this.stopTimer = this.stopTimer.bind(this);
@@ -244,8 +244,14 @@ export default class ChainPage extends React.Component {
     })
   }
 
+
+  //TODO: Replace currently mining with stop mining button down the road
+  stopMiningButton = () => {
+    return <Button onClick={this.stopTimer}>Stop Mining</Button>
+  }
+
   renderTimerButtons = () => {
-    return !this.state.chain.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <Button onClick={this.stopTimer}>Stop Mining</Button>
+    return !this.state.chain.timer.isRunning ? <Button onClick={this.startTimer}>Begin Mining</Button> : <div>Currently Mining.</div>
   }
 
   renderChain = () => {
@@ -309,12 +315,11 @@ export default class ChainPage extends React.Component {
           </Form.Group>
         </Form>
       </div>
-
     )
   }
 
   renderPage (){
-    if (this.chainIsEmpty(this.state.chain)){
+    if (Controller.chainIsEmpty(this.state.chain)){
       return <div>No chain available at this id</div>
     }
     else {
