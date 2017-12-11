@@ -30,7 +30,7 @@ export default class ChainPage extends React.Component {
 
   static async getInitialProps ({ query: { id } }) {
     const appUrl = process.env.NODE_ENV !== 'production' ? 'http://localhost:3000/chains' : 'https://learnthechain.com/chains';
-    const response = await fetch(appUrl)
+    const response = await fetch(appUrl, {mode: 'cors'})
     const chains = await response.json()
     return { chains }
   }
