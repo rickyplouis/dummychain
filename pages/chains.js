@@ -285,13 +285,13 @@ export default class ChainPage extends React.Component {
     )
   }
 
+  chainIsEmpty = (chain) => {
+    console.log('chain', chain);
+    return Object.keys(chain).length === 0 && chain.constructor === Object
+  }
+
   renderPage (){
-    if (Controller.chainIsEmpty(this.state.chain)){
-      return <div>No chain available at this id</div>
-    }
-    else {
-      return this.state.userConnected ? <div>{this.renderChain()}</div> : <div>{this.renderEntranceForm()}</div>
-    }
+    return this.state.userConnected ? <div>{this.renderChain()}</div> : <div>{this.renderEntranceForm()}</div>
   }
 
   render(){

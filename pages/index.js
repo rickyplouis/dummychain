@@ -27,7 +27,7 @@ export default class HomePage extends React.Component {
           <Header as="h2">Simple web visualization of Blockchain</Header>
           <br/>
           <Button basic color={"purple"} onClick={() => handler('/makeChain')}>Make A Chain</Button>
-          <Button basic color={"black"} onClick={() => handler('/joinRoom')}>Join A Chain</Button>
+          <Button basic color={"black"} onClick={() => handler('/joinChain')}>Join A Chain</Button>
         </div>
       </PageContainer>
     )
